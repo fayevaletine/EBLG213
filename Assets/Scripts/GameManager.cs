@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     private Label m_FoodLabel; // UI label for displaying food amount
 
     private int m_FoodAmount = 100;
+    private int m_CurrentLevel = 1; // Current level tracker
 
     private void Awake()
     {
@@ -35,13 +36,25 @@ public class GameManager : MonoBehaviour
         TurnManager = new TurnManager();
         TurnManager.OnTick += OnTurnHappen;
 
-        // Initialize BoardManager and spawn Player
-        BoardManager.Init();
-        PlayerController.Spawn(BoardManager, new Vector2Int(1, 1));
+        // Start a new level
+        NewLevel();
 
         // Link UI label
         m_FoodLabel = UIDoc.rootVisualElement.Q<Label>("FoodLabel");
         m_FoodLabel.text = "Food : " + m_FoodAmount;
+    }
+
+    public void NewLevel()
+    {
+        // Clean up the previous level and initialize a new one
+        BoardManager.Clean();
+        BoardManager.Init();
+
+        // Spawn the player at the starting position
+        PlayerController.Spawn(BoardManager, new Vector2Int(1, 1));
+
+        // Increment the level counter
+        m_CurrentLevel++;
     }
 
     void OnTurnHappen()

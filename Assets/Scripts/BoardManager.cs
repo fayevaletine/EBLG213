@@ -174,4 +174,28 @@ public class BoardManager : MonoBehaviour
     {
         return m_Tilemap.GetTile<Tile>(new Vector3Int(cellIndex.x, cellIndex.y, 0));
     }
+
+    public void Clean()
+    {
+        // Hücre verisi yoksa çıkış yap.
+        if (m_BoardData == null)
+            return;
+
+        for (int y = 0; y < Height; ++y)
+        {
+            for (int x = 0; x < Width; ++x)
+            {
+                var cellData = m_BoardData[x, y];
+
+                if (cellData.ContainedObject != null)
+                {
+                    // GameObject'i tamamen yok et.
+                    Destroy(cellData.ContainedObject.gameObject);
+                }
+
+                // Tile'ı temizle.
+                SetCellTile(new Vector2Int(x, y), null);
+            }
+        }
+    }
 }
